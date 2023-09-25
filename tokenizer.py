@@ -268,7 +268,7 @@ class Tokenizer:
         For example, 
             assuming that self.word2idx = {'the': 0, 'cat': 1, '<unk>': 2}
             >>> tokenizer.convert_tokens_to_ids("the")
-            >>> 0
+            >>> [0]
             >>> tokenizer.convert_tokens_to_ids(["the", "cat"])
             >>> [0, 1]
             >>> tokenizer.convert_tokens_to_ids(["the", "cat", "sleeps"])
@@ -450,4 +450,8 @@ if __name__ == "__main__":
 
     tokenizer = Tokenizer(maxSequenceLength=5)
     ##Try out your tokenizer below
+    tokenizer.load_tokenizer('ToyVocab.txt')
+
+
+
 

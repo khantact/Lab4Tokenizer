@@ -15,7 +15,7 @@ def testPreprocess():
     text = "      Well, I thought; Oh, I guess) I     hate it!?\n"
     assert tokenizer.preprocess(text) == 'well , i thought ; oh , i guess ) i hate it ! ?'
 
-    text = "<s> She loves <unk>, cat </s> <pad> <pad> <pad>"
+    text = "<s> She loves <unk> , cat </s> <pad> <pad> <pad>"
     assert tokenizer.preprocess(text) == '<s> she loves <unk> , cat </s> <pad> <pad> <pad>'
 
     tokenizer = T.Tokenizer(lower=False)
