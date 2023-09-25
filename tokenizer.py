@@ -1,6 +1,7 @@
-import re #Python regular expressions (may be useful)
-import string #Python string library
+import re  # Python regular expressions (may be useful)
+import string  # Python string library
 from typing import Union, Dict, List, Tuple
+
 
 class Tokenizer:
     """
@@ -40,16 +41,16 @@ class Tokenizer:
     """
 
     def __init__(self,
-            maxSequenceLength = 1024,
-            unk_token="<unk>", 
-            bos_token='<s>', 
-            eos_token='</s>', 
-            pad_token = '<pad>', 
-            add_special_tokens = True, 
-            lower = True,
-            padding = True, 
-            truncate = True, 
-            ):
+                 maxSequenceLength=1024,
+                 unk_token="<unk>",
+                 bos_token='<s>',
+                 eos_token='</s>',
+                 pad_token='<pad>',
+                 add_special_tokens=True,
+                 lower=True,
+                 padding=True,
+                 truncate=True,
+                 ):
 
         self.word2idx = dict()
         self.idx2word = []
@@ -72,17 +73,17 @@ class Tokenizer:
         """
         return len(self.idx2word)
 
-    def __call__(self, 
-            text: Union[str, List[str]]) -> Union[int, List[int]]:
+    def __call__(self,
+                 text: Union[str, List[str]]) -> Union[int, List[int]]:
         """
         Sets call operator for the class to be encode. Thus, 
         tokenizer(text, ...) is equivalent to tokenizer.encode(text, ...)
         """
 
         return self.encode(text,
-            add_special_tokens = self.add_special_tokens, 
-            padding = self.padding, 
-            truncate = self.truncate)
+                           add_special_tokens=self.add_special_tokens,
+                           padding=self.padding,
+                           truncate=self.truncate)
 
     @property
     def unk_token_id(self):
@@ -169,7 +170,6 @@ class Tokenizer:
                     self.word2idx[line] = len(self.idx2word)
                     self.idx2word.append(line)
 
-    #TODO
     def preprocess(self, text: str) -> str:
         """
         Preprocess the text for use by tokenizer. It should 
@@ -209,10 +209,19 @@ class Tokenizer:
             >>> text.translate(str.maketrans(table))
             >>> 'CD ABC EF'
         """
-        #TODO: Your code goes here 
-
-        #Delete the following line when implementing your function
-        raise NotImplementedError
+        toRet = ""
+        newS = re.findall(r'[\w]+|[<>!\"#$%&\'()*+,-./\\:;=?@\[\]\^\_\`\{\|\}\~\)\(]', text)
+        for word in newS:
+            if self.lower:
+                word = word.lower()
+            if (re.search(r'[</]',word)):
+                toRet += word
+            elif (re.search(r'>', word)):
+                toRet = toRet.rstrip()
+                toRet += word + " "
+            else: 
+                toRet += word + " "
+        return toRet.strip()
 
     def tokenize(self, text: str) -> List[str]:
         """
@@ -251,9 +260,8 @@ class Tokenizer:
         """
         return self.tokenize(self.preprocess(text))
 
-    #TODO
-    def convert_tokens_to_ids(self, 
-            tokens: Union[str, List[str]]) -> Union[int, List[int]]:
+    def convert_tokens_to_ids(self,
+                              tokens: Union[str, List[str]]) -> Union[int, List[int]]:
         """
         Takes a string (a token) or a list of strings 
         (tokens; output of tokenize) and returns the id(s) of the token(s). 
@@ -279,16 +287,27 @@ class Tokenizer:
             Use self.word2idx
 
         """
-        #TODO: Your code goes here 
+        unknown = self.word2idx['<unk>']
+        keys = self.word2idx.keys()
+        tokenIDs = []
+        if (type(tokens) == str):
+            if (tokens in keys):
+                return [self.word2idx[tokens]]
+            else:
+                return unknown
+        else:
+            for token in tokens:
+                if (token in keys):
+                    tokenIDs.append(self.word2idx[token])
+                else:
+                    tokenIDs.append(unknown)
+        return tokenIDs
 
-        #Delete the following line when implementing your function
-        raise NotImplementedError
-
-    #TODO
-    def encode(self, text: Union[str, List[str]], 
-            add_special_tokens: bool = False, 
-            padding:bool = False, 
-            truncate:bool = False) -> Union[List[int], List[List[int]]]:
+    # TODO
+    def encode(self, text: Union[str, List[str]],
+               add_special_tokens: bool = False,
+               padding: bool = False,
+               truncate: bool = False) -> Union[List[int], List[List[int]]]:
         """
         Take input text, preprocess it, tokenize it, add special 
         tokens (if specified), pad to the maximum length in the batch 
@@ -338,13 +357,13 @@ class Tokenizer:
             Notice the ordering of pad, truncate, and the special tokens
         """
 
-        #TODO: Your code goes here 
+        # TODO: Your code goes here
 
-        #Delete the following line when implementing your function
+        # Delete the following line when implementing your function
         raise NotImplementedError
 
-    def convert_ids_to_tokens(self, 
-            ids: Union[int, List[int]]) -> Union[str, List[str]]:
+    def convert_ids_to_tokens(self,
+                              ids: Union[int, List[int]]) -> Union[str, List[str]]:
         """
         Takes an id or a list of ids and returns the token(s) 
         corresponding to those ids. 
@@ -371,8 +390,8 @@ class Tokenizer:
             tokens.append(self.idx2word[elem])
         return tokens
 
-    def decode(self, 
-            ids: Union[List[int], List[List[int]]]) -> Union[List[str], List[List[str]]]:
+    def decode(self,
+               ids: Union[List[int], List[List[int]]]) -> Union[List[str], List[List[str]]]:
         """
         Takes ids (a list of ids or a batch of ids) and returns 
         the tokens corresponding to those ids (as a list of a batch). 
@@ -398,12 +417,12 @@ class Tokenizer:
         words = []
         for i in ids:
             words.append(self.convert_ids_to_tokens(i))
-        return words  
+        return words
 
-    #TODO
-    def create_vocab(self, fname: str, 
-            freqThreshold: int = 30, 
-            addSpecialTokens: bool = True): 
+    # TODO
+    def create_vocab(self, fname: str,
+                     freqThreshold: int = 30,
+                     addSpecialTokens: bool = True):
         """
         Create a vocabulary for the tokenizer from a file name 
         (called fname). Only keep words that occur more than 
@@ -436,18 +455,17 @@ class Tokenizer:
         ...     "other": 4, ".": 5, "unhappy": 6, ",": 7}
 
         """
-        #Reset (do not remove this)
+        # Reset (do not remove this)
         self.word2idx = {}
         self.idx2word = []
 
-        #TODO: Your code goes here 
+        # TODO: Your code goes here
 
-        #Delete the following line when implementing your function
+        # Delete the following line when implementing your function
         raise NotImplementedError
 
 
 if __name__ == "__main__":
 
     tokenizer = Tokenizer(maxSequenceLength=5)
-    ##Try out your tokenizer below
-
+    # Try out your tokenizer below

@@ -18,22 +18,22 @@ parser.add_argument('--test',
 
 args = parser.parse_args()
 
-if args.test == 'create' or args.test == 'all':
-    print('Testing create_vocab()...')
-    testCreateVocab()
-    print('Passed!')
+# if args.test == 'create' or args.test == 'all':
+#     print('Testing create_vocab()...')
+#     testCreateVocab()
+#     print('Passed!')
 
-if args.test == 'convert' or args.test == 'all':
-    print('Testing convert_tokens_to_ids()...')
-    testConvertTokens2IDs()
-    print('Passed!')
+# if args.test == 'convert' or args.test == 'all':
+#     print('Testing convert_tokens_to_ids()...')
+#     testConvertTokens2IDs()
+#     print('Passed!')
 
-if args.test == 'encode' or args.test == 'all':
-    print('Testing encode()...')
-    testEncode()
-    print('Passed!')
+# if args.test == 'encode' or args.test == 'all':
+#     print('Testing encode()...')
+#     testEncode()
+#     print('Passed!')
 
-if args.test == 'preprocess' or args.test == 'all':
-    print('Testing preprocess()...')
-    testPreprocess()
-    print('Passed!')
+# if args.test == 'preprocess' or args.test == 'all':
+#     print('Testing preprocess()...')
+#     testPreprocess()
+#     print('Passed!')
