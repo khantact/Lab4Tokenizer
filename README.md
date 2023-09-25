@@ -43,7 +43,7 @@ to implement.
 For an additional overview of tokenizers, I recommend checking out the NLP
 portion of HuggingFace's preprocessing
 [tutorial](https://huggingface.co/docs/transformers/preprocessing). If you'd
-like a sense of the range of possible tokenizers, I recommend checkout out
+like a sense of the range of possible tokenizers, I recommend checking out
 [this](https://huggingface.co/docs/transformers/tokenizer_summary) from
 HuggingFace (for your reference, we will be building a word-based tokenizer). 
 
@@ -363,7 +363,7 @@ options:
 For example, you can test preprocess by: 
 
 ```
-test.py --test preprocess
+python test.py --test preprocess
 ```
 
 ## Congrats!
