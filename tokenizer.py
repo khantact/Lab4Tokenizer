@@ -363,7 +363,6 @@ class Tokenizer:
         toRetBatch = []
         toRet = []
         highest = 0
-        lowest = 999999999
         tokenizedID = 0
         
         if (type(text) == str):
@@ -389,7 +388,6 @@ class Tokenizer:
                 preProcessedText = self.preprocess(string)
                 toRet = []
                 highest = max(len(preProcessedText.split()),highest)
-                lowest = min(len(preProcessedText.split()), lowest)
                 for word in preProcessedText.split():
                     word = self.preprocess(word)
                     tokenizedID = self.convert_tokens_to_ids(word)
@@ -403,7 +401,6 @@ class Tokenizer:
                 toRet.insert(-1, Eos)
             if (padding):
                 for batch in toRetBatch:
-                    print(batch)
                     while len(batch) < highest:
                         batch.append(pad)
             if (truncate):
@@ -509,11 +506,28 @@ class Tokenizer:
         # Reset (do not remove this)
         self.word2idx = {}
         self.idx2word = []
+        dictionary = dict()
+        with open(fname) as f:
+            for line in f:
+                words = self.preprocess(line).split()
+                for word in words:
+                    if word in dictionary:
+                        dictionary[word] += 1
+                    else:
+                        dictionary[word] = 1
+            
+        for keys in dictionary:
+            if dictionary.get(keys) < freqThreshold:
+                dictionary.pop(keys)
+            else:
+                IDs = self.convert_tokens_to_ids(keys)
+                self.word2idx[keys] = IDs
+                self.idx2word[IDs] = keys
 
-        # TODO: Your code goes here
 
-        # Delete the following line when implementing your function
-        raise NotImplementedError
+                    
+                
+        
 
 
 if __name__ == "__main__":
