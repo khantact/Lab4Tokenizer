@@ -28,10 +28,10 @@ args = parser.parse_args()
 #     testConvertTokens2IDs()
 #     print('Passed!')
 
-# if args.test == 'encode' or args.test == 'all':
-#     print('Testing encode()...')
-#     testEncode()
-#     print('Passed!')
+if args.test == 'encode' or args.test == 'all':
+    print('Testing encode()...')
+    testEncode()
+    print('Passed!')
 
 # if args.test == 'preprocess' or args.test == 'all':
 #     print('Testing preprocess()...')

@@ -303,7 +303,7 @@ class Tokenizer:
                     tokenIDs.append(unknown)
         return tokenIDs
 
-    # TODO
+    
     def encode(self, text: Union[str, List[str]],
                add_special_tokens: bool = False,
                padding: bool = False,
@@ -356,11 +356,62 @@ class Tokenizer:
 
             Notice the ordering of pad, truncate, and the special tokens
         """
-
-        # TODO: Your code goes here
-
-        # Delete the following line when implementing your function
-        raise NotImplementedError
+        preProcessedText = ""
+        Bos = self.convert_tokens_to_ids("<s>")[0]
+        Eos = self.convert_tokens_to_ids("</s>")[0]
+        pad = self.convert_tokens_to_ids("<pad>")[0]
+        toRetBatch = []
+        toRet = []
+        highest = 0
+        lowest = 999999999
+        tokenizedID = 0
+        
+        if (type(text) == str):
+            preProcessedText = self.preprocess(text)
+            for word in preProcessedText.split():
+                tokenizedID = self.convert_tokens_to_ids(word)  
+                if (type(tokenizedID) == list):
+                    toRet.extend(tokenizedID)
+                else:
+                    toRet.append(tokenizedID)
+            if (add_special_tokens):
+                toRet.insert(0, Bos)
+                toRet.insert(len(toRet), Eos)
+            if (truncate):
+                while (len(toRet) > self.maxSequenceLength):
+                    toRet.pop()
+                if (add_special_tokens):
+                    toRet.pop()
+                    toRet.append(Eos)
+            return toRet
+        elif (type(text) == list):
+            for string in text:
+                preProcessedText = self.preprocess(string)
+                toRet = []
+                highest = max(len(preProcessedText.split()),highest)
+                lowest = min(len(preProcessedText.split()), lowest)
+                for word in preProcessedText.split():
+                    word = self.preprocess(word)
+                    tokenizedID = self.convert_tokens_to_ids(word)
+                    if (type(tokenizedID) == list):
+                        toRet.extend(tokenizedID)
+                    else:
+                        toRet.append(tokenizedID)
+                toRetBatch.append(toRet)
+            if (add_special_tokens):
+                toRet.insert(0, Bos)
+                toRet.insert(-1, Eos)
+            if (padding):
+                for batch in toRetBatch:
+                    print(batch)
+                    while len(batch) < highest:
+                        batch.append(pad)
+            if (truncate):
+                for batch in toRetBatch:
+                    while len(batch) > self.maxSequenceLength:
+                        batch.pop()
+                    batch.insert(len(batch), Eos)
+            return toRetBatch
 
     def convert_ids_to_tokens(self,
                               ids: Union[int, List[int]]) -> Union[str, List[str]]:
@@ -419,7 +470,7 @@ class Tokenizer:
             words.append(self.convert_ids_to_tokens(i))
         return words
 
-    # TODO
+    
     def create_vocab(self, fname: str,
                      freqThreshold: int = 30,
                      addSpecialTokens: bool = True):
